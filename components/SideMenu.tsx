@@ -10,6 +10,7 @@ import {
   Pressable,
   Dimensions,
 } from "react-native";
+import { useRouter } from "expo-router";
 import Colors from "@/constants/Colors";
 import { useColorScheme } from "@/components/useColorScheme";
 import {
@@ -25,7 +26,10 @@ import {
   ChevronDown,
   Plus,
   Check,
+  Hexagon,
+  ChevronRight,
 } from "lucide-react-native";
+import { SAMPLE_NODES } from "@/types/node";
 
 interface SideMenuProps {
   visible: boolean;
@@ -38,7 +42,9 @@ const MENU_WIDTH = width * 0.82;
 const SideMenu = ({ visible, onClose }: SideMenuProps) => {
   const colorScheme = useColorScheme();
   const colors = Colors[colorScheme ?? "light"];
+  const router = useRouter();
   const [accountsExpanded, setAccountsExpanded] = useState(true);
+  const [nodesExpanded, setNodesExpanded] = useState(true);
 
   const accounts = [
     {
@@ -162,6 +168,107 @@ const SideMenu = ({ visible, onClose }: SideMenuProps) => {
 
             {/* Divider */}
             {accountsExpanded && <View style={styles.divider} />}
+
+            {/* Telegram Nodes Section */}
+            <TouchableOpacity
+              style={styles.nodesSectionHeader}
+              onPress={() => setNodesExpanded(!nodesExpanded)}
+              activeOpacity={0.7}
+            >
+              <View style={styles.nodesSectionLeft}>
+                <Hexagon size={22} color="#2AABEE" />
+                <Text
+                  style={[styles.nodesSectionTitle, { color: colors.text }]}
+                >
+                  Telegram Nodes
+                </Text>
+              </View>
+              {nodesExpanded ? (
+                <ChevronUp size={18} color="#8a8a8a" />
+              ) : (
+                <ChevronDown size={18} color="#8a8a8a" />
+              )}
+            </TouchableOpacity>
+
+            {nodesExpanded && (
+              <View style={styles.nodesSection}>
+                {SAMPLE_NODES.map((node) => (
+                  <TouchableOpacity
+                    key={node.id}
+                    style={styles.nodeRow}
+                    onPress={() => {
+                      onClose();
+                      router.push(`/node/${node.id}`);
+                    }}
+                  >
+                    <View style={styles.nodeLeft}>
+                      {node.avatar ? (
+                        <Image
+                          source={{ uri: node.avatar }}
+                          style={styles.nodeAvatar}
+                        />
+                      ) : (
+                        <View
+                          style={[
+                            styles.nodeInitials,
+                            { backgroundColor: node.color },
+                          ]}
+                        >
+                          <Text style={styles.nodeInitialsText}>
+                            {node.initials}
+                          </Text>
+                        </View>
+                      )}
+                      <View style={styles.nodeInfo}>
+                        <Text
+                          style={[styles.nodeName, { color: colors.text }]}
+                          numberOfLines={1}
+                        >
+                          {node.name}
+                        </Text>
+                        <Text style={styles.nodeMembers}>
+                          {node.memberCount.toLocaleString()} members
+                        </Text>
+                      </View>
+                    </View>
+                    {node.unreadCount && node.unreadCount > 0 && (
+                      <View
+                        style={[
+                          styles.nodeUnreadBadge,
+                          { backgroundColor: node.color },
+                        ]}
+                      >
+                        <Text style={styles.nodeUnreadText}>
+                          {node.unreadCount}
+                        </Text>
+                      </View>
+                    )}
+                  </TouchableOpacity>
+                ))}
+
+                {/* Create / Join Node */}
+                <TouchableOpacity
+                  style={styles.nodeRow}
+                  onPress={() => {
+                    onClose();
+                    router.push("/node/create");
+                  }}
+                >
+                  <View style={styles.nodeLeft}>
+                    <View style={styles.addNodeIcon}>
+                      <Plus size={20} color="#2AABEE" />
+                    </View>
+                    <Text style={[styles.nodeName, { color: "#2AABEE" }]}>
+                      Create or Join Node
+                    </Text>
+                  </View>
+                  <ChevronRight size={18} color="#2AABEE" />
+                </TouchableOpacity>
+              </View>
+            )}
+
+            {/* Divider */}
+            <View style={styles.divider} />
 
             {/* Menu Items - Section 1 */}
             <View style={styles.menuSection}>
@@ -415,6 +522,93 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 14,
     fontWeight: "bold",
+  },
+  // Nodes section styles
+  nodesSectionHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingVertical: 12,
+    paddingHorizontal: 18,
+  },
+  nodesSectionLeft: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  nodesSectionTitle: {
+    fontSize: 15,
+    fontWeight: "600",
+    marginLeft: 12,
+  },
+  nodesSection: {
+    paddingBottom: 8,
+  },
+  nodeRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingVertical: 10,
+    paddingHorizontal: 18,
+    paddingLeft: 28,
+  },
+  nodeLeft: {
+    flexDirection: "row",
+    alignItems: "center",
+    flex: 1,
+  },
+  nodeAvatar: {
+    width: 40,
+    height: 40,
+    borderRadius: 12,
+  },
+  nodeInitials: {
+    width: 40,
+    height: 40,
+    borderRadius: 12,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  nodeInitialsText: {
+    color: "#fff",
+    fontSize: 14,
+    fontWeight: "600",
+  },
+  nodeInfo: {
+    marginLeft: 14,
+    flex: 1,
+  },
+  nodeName: {
+    fontSize: 15,
+    fontWeight: "500",
+  },
+  nodeMembers: {
+    fontSize: 12,
+    color: "#8a8a8a",
+    marginTop: 2,
+  },
+  nodeUnreadBadge: {
+    minWidth: 22,
+    height: 20,
+    borderRadius: 10,
+    paddingHorizontal: 6,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  nodeUnreadText: {
+    color: "#fff",
+    fontSize: 12,
+    fontWeight: "600",
+  },
+  addNodeIcon: {
+    width: 40,
+    height: 40,
+    borderRadius: 12,
+    borderWidth: 2,
+    borderColor: "#2AABEE",
+    borderStyle: "dashed",
+    justifyContent: "center",
+    alignItems: "center",
+    marginRight: 14,
   },
 });
 
