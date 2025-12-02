@@ -266,7 +266,10 @@ export default function NodeScreen() {
 
         {/* Add Category button for admins */}
         {(node.myRole === "owner" || node.myRole === "admin") && (
-          <TouchableOpacity style={styles.addCategoryBtn}>
+          <TouchableOpacity
+            style={styles.addCategoryBtn}
+            onPress={() => router.push(`/node/${id}/category/create`)}
+          >
             <Plus size={18} color={node.color} />
             <Text style={[styles.addCategoryText, { color: node.color }]}>
               Add Category

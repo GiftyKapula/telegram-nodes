@@ -429,4 +429,76 @@ export const SAMPLE_NODES: TelegramNode[] = [
     members: [],
     createdAt: "2024-06-10",
   },
+  {
+    id: "4",
+    name: "Startup Founders",
+    description: "Connect with entrepreneurs, share ideas, and build together",
+    initials: "SF",
+    color: "#9C27B0",
+    memberCount: 1250,
+    onlineCount: 89,
+    unreadCount: 12,
+    myRole: "member",
+    isPublic: true,
+    categories: [
+      {
+        id: "c1",
+        name: "GENERAL",
+        channels: [
+          { id: "ch1", name: "introductions", type: "text" },
+          {
+            id: "ch2",
+            name: "general-chat",
+            type: "text",
+            unreadCount: 8,
+            lastMessage: {
+              sender: "Founder123",
+              content: "Just closed our seed round! 🎉",
+              time: "16:45",
+            },
+          },
+          { id: "ch3", name: "announcements", type: "announcement" },
+        ],
+      },
+      {
+        id: "c2",
+        name: "RESOURCES",
+        channels: [
+          { id: "ch4", name: "funding-tips", type: "text" },
+          { id: "ch5", name: "hiring", type: "text" },
+          { id: "ch6", name: "legal-advice", type: "text" },
+        ],
+      },
+      {
+        id: "c3",
+        name: "NETWORKING",
+        channels: [
+          { id: "ch7", name: "Pitch Practice", type: "voice" },
+          { id: "ch8", name: "Office Hours", type: "video" },
+        ],
+      },
+    ],
+    roles: [
+      {
+        id: "r1",
+        name: "Founder",
+        color: "#9C27B0",
+        position: 80,
+        permissions: {
+          manageNode: false,
+          manageChannels: false,
+          manageRoles: false,
+          manageMembers: false,
+          kickMembers: false,
+          banMembers: false,
+          sendMessages: true,
+          attachFiles: true,
+          mentionEveryone: false,
+          createInvites: true,
+        },
+      },
+    ],
+    members: [],
+    createdAt: "2024-04-15",
+  },
 ];

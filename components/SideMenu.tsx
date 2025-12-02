@@ -45,6 +45,14 @@ const SideMenu = ({ visible, onClose }: SideMenuProps) => {
   const router = useRouter();
   const [accountsExpanded, setAccountsExpanded] = useState(true);
   const [nodesExpanded, setNodesExpanded] = useState(true);
+  const [showAllNodes, setShowAllNodes] = useState(false);
+
+  const MAX_VISIBLE_NODES = 2;
+  const visibleNodes = showAllNodes
+    ? SAMPLE_NODES
+    : SAMPLE_NODES.slice(0, MAX_VISIBLE_NODES);
+  const hasMoreNodes = SAMPLE_NODES.length > MAX_VISIBLE_NODES;
+  const hiddenNodesCount = SAMPLE_NODES.length - MAX_VISIBLE_NODES;
 
   const accounts = [
     {
@@ -192,7 +200,7 @@ const SideMenu = ({ visible, onClose }: SideMenuProps) => {
 
             {nodesExpanded && (
               <View style={styles.nodesSection}>
-                {SAMPLE_NODES.map((node) => (
+                {visibleNodes.map((node) => (
                   <TouchableOpacity
                     key={node.id}
                     style={styles.nodeRow}
@@ -245,6 +253,31 @@ const SideMenu = ({ visible, onClose }: SideMenuProps) => {
                     )}
                   </TouchableOpacity>
                 ))}
+
+                {/* View More / Show Less Button */}
+                {hasMoreNodes && (
+                  <TouchableOpacity
+                    style={styles.viewMoreRow}
+                    onPress={() => setShowAllNodes(!showAllNodes)}
+                  >
+                    <View style={styles.viewMoreLeft}>
+                      <View style={styles.viewMoreIcon}>
+                        {showAllNodes ? (
+                          <ChevronUp size={16} color="#2AABEE" />
+                        ) : (
+                          <ChevronDown size={16} color="#2AABEE" />
+                        )}
+                      </View>
+                      <Text style={styles.viewMoreText}>
+                        {showAllNodes
+                          ? "Show Less"
+                          : `View ${hiddenNodesCount} More Node${
+                              hiddenNodesCount > 1 ? "s" : ""
+                            }`}
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
+                )}
 
                 {/* Create / Join Node */}
                 <TouchableOpacity
@@ -598,6 +631,29 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 12,
     fontWeight: "600",
+  },
+  viewMoreRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 10,
+    paddingHorizontal: 18,
+    paddingLeft: 28,
+  },
+  viewMoreLeft: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  viewMoreIcon: {
+    width: 40,
+    height: 28,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  viewMoreText: {
+    fontSize: 14,
+    fontWeight: "500",
+    color: "#2AABEE",
+    marginLeft: 14,
   },
   addNodeIcon: {
     width: 40,

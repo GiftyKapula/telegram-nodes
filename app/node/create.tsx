@@ -256,6 +256,16 @@ export default function CreateNodeScreen() {
                 !nodeName.trim() && styles.createButtonDisabled,
               ]}
               disabled={!nodeName.trim()}
+              onPress={() =>
+                router.push({
+                  pathname: "/node/setup",
+                  params: {
+                    name: nodeName,
+                    description: nodeDescription,
+                    isPublic: isPublic.toString(),
+                  },
+                })
+              }
             >
               <Plus size={20} color="#fff" />
               <Text style={styles.createButtonText}>Create Node</Text>
